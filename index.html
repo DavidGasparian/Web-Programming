@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Заголовок страницы</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header class="header">
+    <div class="header__container">
+        <a href="#" class="logo">TECH<span class="logo__accent">STORE</span></a>
+        
+        <form class="search-form" action="#" method="get">
+            <input type="text" placeholder="Найти технику..." class="search-form__input">
+            <button type="submit" class="search-form__btn">🔍</button>
+        </form>
+
+        <div class="header__actions">
+            <span class="header__phone">8 (800) 555-35-35</span>
+            <button class="cart-btn" id="open-cart-btn">
+                🛒 <span class="cart-btn__count" id="cart-count">0</span> шт. | 
+                <span class="cart-btn__sum" id="cart-sum">0 ₽</span>
+            </button>
+        </div>
+    </div>
+</header>
+<div class="page-wrapper">
+    <aside class="sidebar">
+        <h2 class="sidebar__title">Каталог</h2>
+        <nav class="sidebar__nav">
+            <ul class="category-list">
+                <li><a href="#" class="category-link active" data-category="all">Все товары</a></li>
+                <li><a href="#" class="category-link" data-category="phones">Телефоны</a></li>
+                <li><a href="#" class="category-link" data-category="laptops">Ноутбуки</a></li>
+                <li><a href="#" class="category-link" data-category="tablets">Планшеты</a></li>
+                <li><a href="#" class="category-link" data-category="audio">Музыкальное оборудование</a></li>
+                <li><a href="#" class="category-link" data-category="home">Домашняя техника</a></li>
+            </ul>
+        </nav>
+
+        <div class="promo-block">
+            <p>Быстрая доставка</p>
+            <p>Гарантия качества</p>
+        </div>
+    </aside>
+
+    <main class="main-content">
+
+        <section class="hero">
+            <div class="hero__content">
+                <span class="hero__tag">ФЛАГМАН</span>
+                <h1 class="hero__title">iPhone 15 Pro</h1>
+                <p class="hero__desc">Титановый корпус, чип A17 Pro и невероятные возможности камеры.</p>
+                <span class="hero__price">129 990 ₽</span>
+                <button class="btn btn--primary add-to-cart" data-id="1" data-name="iPhone 15 Pro" data-price="129990">В корзину</button>
+            </div>
+            <div class="hero__image">
+            </div>
+        </section>
+
+        <section class="catalog">
+            <h2 class="catalog__title">Популярные товары <span class="catalog__count">Найдено: 6</span></h2>
+            <div class="products-grid">
+                <article class="product-card" data-category="laptops" data-name="MacBook Air M2">
+                    <img src="img/laptop.jpg" alt="Ноутбук" class="product-card__img">
+                    <h3 class="product-card__title">MacBook Air M2</h3>
+                    <p class="product-card__price">109 990 ₽</p>
+                    <button class="btn btn--outline add-to-cart" data-id="2" data-name="MacBook Air M2" data-price="109990">В корзину</button>
+                </article>
+
+                <article class="product-card" data-category="laptops" data-name="MacBook Pro 16 M2">
+                    <img src="img/Mackbook Pro.jpeg" alt="Ноутбук" class="product-card__img">
+                    <h3 class="product-card__title">MacBook Pro 16 M2</h3>
+                    <p class="product-card__price">390 990 ₽</p>
+                    <button class="btn btn--outline add-to-cart" data-id="2" data-name="MacBook Air M2" data-price="109990">В корзину</button>
+                </article>
+
+                <article class="product-card">
+                    <img src="img/Iphone.jpg" alt="Телефон" class="product-card__img">
+                    <h3 class="product-card__title">Iphone 12 Pro Max</h3>
+                    <p class="product-card__price">42 990 ₽</p>
+                    <button class="btn btn--outline add-to-cart" data-id="2" data-name="MacBook Air M2" data-price="109990">В корзину</button>
+                </article>
+
+                <article class="product-card">
+                    <img src="img/Ipad.jpeg" alt="Планшет" class="product-card__img">
+                    <h3 class="product-card__title">Ipad Mini M5</h3>
+                    <p class="product-card__price">109 990 ₽</p>
+                    <button class="btn btn--outline add-to-cart" data-id="2" data-name="MacBook Air M2" data-price="109990">В корзину</button>
+                </article>
+
+                <article class="product-card">
+                    <img src="img/Guitar.jpg" alt="Гитара" class="product-card__img">
+                    <h3 class="product-card__title">Yamaha ERG121 Metallic Red</h3>
+                    <p class="product-card__price">43 990 ₽</p>
+                    <button class="btn btn--outline add-to-cart" data-id="2" data-name="MacBook Air M2" data-price="109990">В корзину</button>
+                </article>
+
+                <article class="product-card">
+                    <img src="img/coffeemaker.jpg" alt="Музы" class="product-card__img">
+                    <h3 class="product-card__title">Автоматическая кофемашина KRUPS Intuition Experience</h3>
+                    <p class="product-card__price">109 990 ₽</p>
+                    <button class="btn btn--outline add-to-cart" data-id="2" data-name="MacBook Air M2" data-price="109990">В корзину</button>
+                </article>
+            </div>
+        </section>
+    </main>
+</div>
+
+<div class="modal-overlay" id="cart-modal">
+    <div class="modal">
+        <button class="modal__close" id="close-cart-btn">&times;</button>
+
+        <div id="cart-view">
+            <h2 class="modal__title">Корзина</h2>
+            <div class="cart-items" id="cart-items-container">
+                <p class="empty-cart-msg">Корзина пуста</p>
+            </div>
+            <div class="cart-total">
+                Итого: <span id="modal-total-sum">0 ₽</span>
+            </div>
+            <button class="btn btn--primary btn--full" id="checkout-btn">
+                Оформить заказ
+            </button>
+        </div>
+
+        <div id="order-view" hidden>
+            <h2 class="modal__title">Оформление заказа</h2>
+            <form class="order-form" id="order-form">
+                <input type="text" name="firstName" placeholder="Имя" required>
+                <input type="text" name="lastName"  placeholder="Фамилия" required>
+                <input type="text" name="address"   placeholder="Адрес доставки" required>
+                <input type="tel"  name="phone"     placeholder="Контактный телефон" required>
+                <button type="submit" class="btn btn--primary btn--full">Создать заказ</button>
+            </form>
+        </div>
+    </div>
+</div>
+<script src="js/app.js"></script>
+</body>
+</html>
