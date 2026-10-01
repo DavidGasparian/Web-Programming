@@ -11,7 +11,7 @@
     <div class="header__container">
         <a href="#" class="logo">TECH<span class="logo__accent">STORE</span></a>
         
-        <form class="search-form" action="#" method="get">
+        <form class="search-form" id="search-form" action="#" method="get">
             <input type="text" placeholder="Найти технику..." class="search-form__input">
             <button type="submit" class="search-form__btn">🔍</button>
         </form>
@@ -60,7 +60,7 @@
         </section>
 
         <section class="catalog">
-            <h2 class="catalog__title">Популярные товары <span class="catalog__count">Найдено: 6</span></h2>
+            <h2 class="catalog__title">Популярные товары <span class="catalog__count" id="catalog-count">Найдено: 6</span></h2>
             <div class="products-grid">
                 <article class="product-card" data-category="laptops" data-name="MacBook Air M2">
                     <img src="img/laptop.jpg" alt="Ноутбук" class="product-card__img">
@@ -76,28 +76,28 @@
                     <button class="btn btn--outline add-to-cart" data-id="2" data-name="MacBook Air M2" data-price="109990">В корзину</button>
                 </article>
 
-                <article class="product-card">
+                <article class="product-card" data-category="phones" data-name="Iphone 12 Pro Max">
                     <img src="img/Iphone.jpg" alt="Телефон" class="product-card__img">
                     <h3 class="product-card__title">Iphone 12 Pro Max</h3>
                     <p class="product-card__price">42 990 ₽</p>
                     <button class="btn btn--outline add-to-cart" data-id="2" data-name="MacBook Air M2" data-price="109990">В корзину</button>
                 </article>
 
-                <article class="product-card">
+                <article class="product-card" data-category="tablets" data-name="Ipad Mini M5">
                     <img src="img/Ipad.jpeg" alt="Планшет" class="product-card__img">
                     <h3 class="product-card__title">Ipad Mini M5</h3>
                     <p class="product-card__price">109 990 ₽</p>
                     <button class="btn btn--outline add-to-cart" data-id="2" data-name="MacBook Air M2" data-price="109990">В корзину</button>
                 </article>
 
-                <article class="product-card">
+                <article class="product-card" data-category="audio" data-name="Yamaha ERG121 Metallic Red">
                     <img src="img/Guitar.jpg" alt="Гитара" class="product-card__img">
                     <h3 class="product-card__title">Yamaha ERG121 Metallic Red</h3>
                     <p class="product-card__price">43 990 ₽</p>
                     <button class="btn btn--outline add-to-cart" data-id="2" data-name="MacBook Air M2" data-price="109990">В корзину</button>
                 </article>
 
-                <article class="product-card">
+                <article class="product-card" data-category="home" data-name="KRUPS Intuition Experience">
                     <img src="img/coffeemaker.jpg" alt="Музы" class="product-card__img">
                     <h3 class="product-card__title">Автоматическая кофемашина KRUPS Intuition Experience</h3>
                     <p class="product-card__price">109 990 ₽</p>

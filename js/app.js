@@ -130,6 +130,71 @@ itemsBox.addEventListener('click', (e) => {
 });
 
 /* =========================================================
+   6.5. ФИЛЬТРАЦИЯ КАТАЛОГА: КАТЕГОРИИ + ПОИСК
+   ========================================================= */
+
+/* Текущее состояние фильтров */
+let activeCategory = 'all';
+let searchQuery = '';
+
+const cards           = document.querySelectorAll('.product-card');
+const categoryLinks   = document.querySelectorAll('.category-link');
+const searchForm      = document.getElementById('search-form');
+const searchInput     = document.getElementById('search-input');
+const catalogCount    = document.getElementById('catalog-count');
+
+/* Применяем оба фильтра: и категорию, и поиск */
+function applyFilters() {
+    let visible = 0;
+
+    cards.forEach(card => {
+        const matchCategory =
+            activeCategory === 'all' ||
+            card.dataset.category === activeCategory;
+
+        const name = (card.dataset.name || '').toLowerCase();
+        const matchSearch = name.includes(searchQuery);
+
+        if (matchCategory && matchSearch) {
+            card.hidden = false;
+            visible++;
+        } else {
+            card.hidden = true;
+        }
+    });
+
+    /* Обновляем счётчик «Найдено: N» */
+    if (catalogCount) {
+        catalogCount.textContent = `Найдено: ${visible}`;
+    }
+}
+
+/* --- Клик по категории --- */
+categoryLinks.forEach(link => {
+    link.addEventListener('click', (e) => {
+        e.preventDefault();          // не перезагружать страницу по href="#"
+
+        /* Подсветка активной */
+        categoryLinks.forEach(l => l.classList.remove('active'));
+        link.classList.add('active');
+
+        activeCategory = link.dataset.category;
+        applyFilters();
+    });
+});
+
+/* --- Поиск --- */
+searchForm.addEventListener('submit', (e) => e.preventDefault()); // Enter не перезагружает
+
+searchInput.addEventListener('input', () => {
+    searchQuery = searchInput.value.trim().toLowerCase();
+    applyFilters();
+});
+
+/* Первичная отрисовка */
+applyFilters();
+
+/* =========================================================
    7. МОДАЛКА: открыть / закрыть
    ========================================================= */
 function openModal() {
