@@ -1,253 +1,320 @@
 'use strict';
 
-/* =========================================================
-   1. СОСТОЯНИЕ И LOCALSTORAGE
-   ========================================================= */
 const STORAGE_KEY = 'techstore_cart';
-let cart = [];
+
+const cartCountEl = document.getElementById('cart-count');
+const cartSumEl = document.getElementById('cart-sum');
+const modalTotalEl = document.getElementById('modal-total-sum');
+const itemsContainer = document.getElementById('cart-items-container');
+
+const modalOverlay = document.getElementById('cart-modal');
+const openCartBtn = document.getElementById('open-cart-btn');
+const closeCartBtn = document.getElementById('close-cart-btn');
+const checkoutBtn = document.getElementById('checkout-btn');
+const successCloseBtn = document.getElementById('success-close-btn');
+
+const cartView = document.getElementById('cart-view');
+const orderView = document.getElementById('order-view');
+const successView = document.getElementById('success-view');
+const orderForm = document.getElementById('order-form');
+
+const searchForm = document.getElementById('search-form');
+const searchInput = document.getElementById('search-input');
+const categoryLinks = document.querySelectorAll('.category-link');
+const productCards = document.querySelectorAll('.product-card');
+const catalogCountEl = document.getElementById('catalog-count');
+const productsGrid = document.getElementById('products-grid');
+
+// СОСТОЯНИЕ КОРЗИНЫ
+// Элемент корзины: { id, name, price, qty }
+let cart = loadCart();
 
 function loadCart() {
     try {
-        cart = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-    } catch {
-        cart = [];
+        const data = JSON.parse(localStorage.getItem(STORAGE_KEY));
+        if (!Array.isArray(data)) return [];
+        // отбрасываем некорректные записи (например, если localStorage правили вручную)
+        return data.filter(item =>
+            item &&
+            Number.isFinite(item.id) &&
+            typeof item.name === 'string' &&
+            Number.isFinite(item.price) &&
+            Number.isInteger(item.qty) && item.qty > 0
+        );
+    } catch (e) {
+        return [];
     }
 }
 
 function saveCart() {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(cart));
+    try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(cart));
+    } catch (e) {
+        console.error('Не удалось сохранить корзину:', e);
+    }
 }
 
-/* =========================================================
-   2. ССЫЛКИ НА DOM
-   ========================================================= */
-const modal       = document.getElementById('cart-modal');
-const openBtn     = document.getElementById('open-cart-btn');
-const closeBtn    = document.getElementById('close-cart-btn');
-const itemsBox    = document.getElementById('cart-items-container');
-const modalTotal  = document.getElementById('modal-total-sum');
-const headerCount = document.getElementById('cart-count');
-const headerSum   = document.getElementById('cart-sum');
-const orderForm   = document.getElementById('order-form');
-const cartView    = document.getElementById('cart-view');
-const orderView   = document.getElementById('order-view');
-const checkoutBtn = document.getElementById('checkout-btn');
+// ОПЕРАЦИИ С КОРЗИНОЙ
+function addToCart(product) {
+    const existing = cart.find(item => item.id === product.id);
+    if (existing) {
+        existing.qty += 1;
+    } else {
+        cart.push({ ...product, qty: 1 });
+    }
+    updateCart();
+}
 
-/* =========================================================
-   3. ХЕЛПЕРЫ
-   ========================================================= */
-const formatPrice = (n) => n.toLocaleString('ru-RU') + ' ₽';
-const getTotal = () => cart.reduce((s, i) => s + i.price * i.qty, 0);
-const getCount = () => cart.reduce((s, i) => s + i.qty, 0);
+function changeQty(id, delta) {
+    const item = cart.find(i => i.id === id);
+    if (!item) return;
+    item.qty += delta;
+    if (item.qty <= 0) {
+        removeFromCart(id);
+        return;
+    }
+    updateCart();
+}
 
-/* =========================================================
-   4. ДОБАВЛЕНИЕ ТОВАРА (критерий: «добавление в корзину»)
-   ========================================================= */
-function addToCart(id, name, price) {
-    const existing = cart.find(i => i.id === id);
-    if (existing) existing.qty += 1;
-    else cart.push({ id, name, price, qty: 1 });
+function removeFromCart(id) {
+    cart = cart.filter(item => item.id !== id);
+    updateCart();
+}
 
+function clearCart() {
+    cart = [];
+    updateCart();
+}
+
+function updateCart() {
     saveCart();
-    render();
+    renderCart();
 }
 
-/* Делегирование — один обработчик на всю страницу.
-   Ловит и hero-кнопку, и кнопки внутри карточек. */
+// ОТРИСОВКА
+function formatPrice(value) {
+    return value.toLocaleString('ru-RU') + ' ₽';
+}
+
+function getTotals() {
+    return cart.reduce(
+        (acc, item) => {
+            acc.qty += item.qty;
+            acc.sum += item.price * item.qty;
+            return acc;
+        },
+        { qty: 0, sum: 0 }
+    );
+}
+
+function createButton(text, className, action, id, label) {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = className;
+    btn.textContent = text;
+    btn.dataset.action = action;
+    btn.dataset.id = id;
+    if (label) btn.setAttribute('aria-label', label);
+    return btn;
+}
+
+function createCartItem(item) {
+    const row = document.createElement('div');
+    row.className = 'cart-item';
+
+    const info = document.createElement('div');
+    info.className = 'cart-item__info';
+    const name = document.createElement('div');
+    name.className = 'cart-item__name';
+    name.textContent = item.name;
+    const price = document.createElement('div');
+    price.className = 'cart-item__price';
+    price.textContent = formatPrice(item.price);
+    info.append(name, price);
+
+    const controls = document.createElement('div');
+    controls.className = 'cart-item__controls';
+    const qty = document.createElement('span');
+    qty.className = 'qty-value';
+    qty.textContent = item.qty;
+    controls.append(
+        createButton('−', 'qty-btn', 'decrease', item.id, 'Уменьшить количество'),
+        qty,
+        createButton('+', 'qty-btn', 'increase', item.id, 'Увеличить количество')
+    );
+
+    const sum = document.createElement('div');
+    sum.className = 'cart-item__sum';
+    sum.textContent = formatPrice(item.price * item.qty);
+
+    const remove = createButton('Удалить', 'remove-btn', 'remove', item.id);
+
+    row.append(info, controls, sum, remove);
+    return row;
+}
+
+function renderCart() {
+    const totals = getTotals();
+
+    // шапка и итог в модальном окне
+    cartCountEl.textContent = totals.qty;
+    cartSumEl.textContent = formatPrice(totals.sum);
+    modalTotalEl.textContent = formatPrice(totals.sum);
+
+    // список товаров
+    itemsContainer.replaceChildren();
+    if (cart.length === 0) {
+        const empty = document.createElement('p');
+        empty.className = 'empty-cart-msg';
+        empty.textContent = 'Корзина пуста';
+        itemsContainer.append(empty);
+    } else {
+        cart.forEach(item => itemsContainer.append(createCartItem(item)));
+    }
+
+    // нельзя оформить пустой заказ
+    checkoutBtn.disabled = cart.length === 0;
+}
+
+// ОБРАБОТЧИКИ: КОРЗИНА
+// Добавление в корзину (делегирование: работает для всех кнопок «В корзину»)
 document.addEventListener('click', (e) => {
     const btn = e.target.closest('.add-to-cart');
     if (!btn) return;
 
-    addToCart(
-        Number(btn.dataset.id),
-        btn.dataset.name,
-        Number(btn.dataset.price)
-    );
+    addToCart({
+        id: Number(btn.dataset.id),
+        name: btn.dataset.name,
+        price: Number(btn.dataset.price)
+    });
+
+    // Анимация после нажатия кнопки добавить
+    if (!btn.dataset.busy) {
+        const original = btn.textContent;
+        btn.dataset.busy = '1';
+        btn.textContent = 'Добавлено ✓';
+        setTimeout(() => {
+            btn.textContent = original;
+            delete btn.dataset.busy;
+        }, 800);
+    }
 });
 
-/* =========================================================
-   5. РЕНДЕР (критерии: «сумма пересчитывается», «итог корректен»)
-   ========================================================= */
-function render() {
-    /* Шапка */
-    headerCount.textContent = getCount();
-    headerSum.textContent   = formatPrice(getTotal());
-
-    /* Пустая корзина */
-    if (cart.length === 0) {
-        itemsBox.innerHTML = '<p class="empty-cart-msg">Корзина пуста</p>';
-        modalTotal.textContent = formatPrice(0);
-        checkoutBtn.disabled = true;
-        return;
-    }
-    checkoutBtn.disabled = false;
-
-    /* Позиции */
-    itemsBox.innerHTML = cart.map(item => `
-        <div class="cart-item" data-id="${item.id}">
-            <div>
-                <div><strong>${item.name}</strong></div>
-                <div>${formatPrice(item.price)}</div>
-            </div>
-            <div class="cart-item__controls">
-                <button class="qty-btn" data-action="dec" aria-label="Уменьшить">−</button>
-                <span>${item.qty}</span>
-                <button class="qty-btn" data-action="inc" aria-label="Увеличить">+</button>
-                <button class="remove-btn" data-action="remove">Удалить</button>
-            </div>
-        </div>
-    `).join('');
-
-    modalTotal.textContent = formatPrice(getTotal());
-}
-
-/* =========================================================
-   6. +, −, УДАЛИТЬ (критерии: «удаление», «изменение количества»)
-   ========================================================= */
-itemsBox.addEventListener('click', (e) => {
-    const btn = e.target.closest('[data-action]');
+// Кнопки внутри корзины
+itemsContainer.addEventListener('click', (e) => {
+    const btn = e.target.closest('button[data-action]');
     if (!btn) return;
 
-    const id   = Number(btn.closest('.cart-item').dataset.id);
-    const item = cart.find(i => i.id === id);
-    if (!item) return;
-
+    const id = Number(btn.dataset.id);
     switch (btn.dataset.action) {
-        case 'inc':
-            item.qty += 1;
-            break;
-        case 'dec':
-            item.qty -= 1;
-            if (item.qty <= 0) cart = cart.filter(i => i.id !== id);
-            break;
-        case 'remove':
-            cart = cart.filter(i => i.id !== id);
-            break;
+        case 'increase': changeQty(id, 1); break;
+        case 'decrease': changeQty(id, -1); break;
+        case 'remove': removeFromCart(id); break;
     }
-
-    saveCart();
-    render();
 });
 
-/* =========================================================
-   6.5. ФИЛЬТРАЦИЯ КАТАЛОГА: КАТЕГОРИИ + ПОИСК
-   ========================================================= */
+// МОДАЛЬНОЕ ОКНО
+function showView(view) {
+    cartView.hidden = view !== 'cart';
+    orderView.hidden = view !== 'order';
+    successView.hidden = view !== 'success';
+}
 
-/* Текущее состояние фильтров */
-let activeCategory = 'all';
+function openModal() {
+    showView('cart');
+    modalOverlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+    modalOverlay.classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+openCartBtn.addEventListener('click', openModal);
+closeCartBtn.addEventListener('click', closeModal);
+successCloseBtn.addEventListener('click', closeModal);
+
+// клик по фону закрывает окно
+modalOverlay.addEventListener('click', (e) => {
+    if (e.target === modalOverlay) closeModal();
+});
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modalOverlay.classList.contains('active')) closeModal();
+});
+
+// Форма "Оформить заказ"
+checkoutBtn.addEventListener('click', () => {
+    if (cart.length === 0) return;
+    showView('order');
+});
+
+// ОФОРМЛЕНИЕ ЗАКАЗА
+orderForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    const data = new FormData(orderForm);
+    const fields = ['firstName', 'lastName', 'address', 'phone'];
+    const allFilled = fields.every(name => String(data.get(name)).trim() !== '');
+
+    if (!allFilled) {
+        alert('Пожалуйста, заполните все поля');
+        return;
+    }
+
+    clearCart();       // заказ оформлен, корзина очищается (и в localStorage тоже)
+    orderForm.reset();
+    showView('success'); // сообщение «Заказ создан»
+});
+
+// КАТЕГОРИИ И ПОИСК
+let currentCategory = 'all';
 let searchQuery = '';
 
-const cards           = document.querySelectorAll('.product-card');
-const categoryLinks   = document.querySelectorAll('.category-link');
-const searchForm      = document.getElementById('search-form');
-const searchInput     = document.getElementById('search-input');
-const catalogCount    = document.getElementById('catalog-count');
-
-/* Применяем оба фильтра: и категорию, и поиск */
 function applyFilters() {
     let visible = 0;
 
-    cards.forEach(card => {
-        const matchCategory =
-            activeCategory === 'all' ||
-            card.dataset.category === activeCategory;
-
-        const name = (card.dataset.name || '').toLowerCase();
-        const matchSearch = name.includes(searchQuery);
-
-        if (matchCategory && matchSearch) {
-            card.hidden = false;
-            visible++;
-        } else {
-            card.hidden = true;
-        }
+    productCards.forEach(card => {
+        const matchCategory = currentCategory === 'all' || card.dataset.category === currentCategory;
+        const matchSearch = card.dataset.name.toLowerCase().includes(searchQuery);
+        card.hidden = !(matchCategory && matchSearch);
+        if (!card.hidden) visible++;
     });
 
-    /* Обновляем счётчик «Найдено: N» */
-    if (catalogCount) {
-        catalogCount.textContent = `Найдено: ${visible}`;
+    catalogCountEl.textContent = `Найдено: ${visible}`;
+
+    // сообщение, если ничего не найдено
+    let noResults = document.getElementById('no-results');
+    if (visible === 0) {
+        if (!noResults) {
+            noResults = document.createElement('p');
+            noResults.id = 'no-results';
+            noResults.className = 'no-results';
+            noResults.textContent = 'Ничего не найдено';
+            productsGrid.append(noResults);
+        }
+    } else if (noResults) {
+        noResults.remove();
     }
 }
 
-/* --- Клик по категории --- */
 categoryLinks.forEach(link => {
     link.addEventListener('click', (e) => {
-        e.preventDefault();          // не перезагружать страницу по href="#"
-
-        /* Подсветка активной */
+        e.preventDefault();
         categoryLinks.forEach(l => l.classList.remove('active'));
         link.classList.add('active');
-
-        activeCategory = link.dataset.category;
+        currentCategory = link.dataset.category;
         applyFilters();
     });
 });
-
-/* --- Поиск --- */
-searchForm.addEventListener('submit', (e) => e.preventDefault()); // Enter не перезагружает
 
 searchInput.addEventListener('input', () => {
     searchQuery = searchInput.value.trim().toLowerCase();
     applyFilters();
 });
 
-/* Первичная отрисовка */
+searchForm.addEventListener('submit', (e) => e.preventDefault());
+
+renderCart();
 applyFilters();
-
-/* =========================================================
-   7. МОДАЛКА: открыть / закрыть
-   ========================================================= */
-function openModal() {
-    /* Всегда открываем на экране корзины */
-    cartView.hidden  = false;
-    orderView.hidden = true;
-    modal.classList.add('active');
-}
-function closeModal() {
-    modal.classList.remove('active');
-}
-
-openBtn.addEventListener('click', openModal);
-closeBtn.addEventListener('click', closeModal);
-
-/* Клик по фону */
-modal.addEventListener('click', (e) => {
-    if (e.target === modal) closeModal();
-});
-
-/* Escape */
-document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && modal.classList.contains('active')) closeModal();
-});
-
-/* =========================================================
-   8. ПЕРЕХОД К ФОРМЕ (критерий: «форма открывается
-      при нажатии на кнопку Оформить заказ»)
-   ========================================================= */
-checkoutBtn.addEventListener('click', () => {
-    cartView.hidden  = true;
-    orderView.hidden = false;
-});
-
-/* =========================================================
-   9. SUBMIT ФОРМЫ (критерий: «Заказ создан!»)
-   ========================================================= */
-orderForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-
-    /* Встроенная валидация HTML уже отработала (required) */
-    alert('Заказ создан!');
-
-    /* Сброс */
-    cart = [];
-    saveCart();
-    render();
-    orderForm.reset();
-    closeModal();
-});
-
-/* =========================================================
-   10. СТАРТ
-   ========================================================= */
-loadCart();
-render();

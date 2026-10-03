@@ -3,32 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Заголовок страницы</title>
+    <title>DavStore</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 <header class="header">
     <div class="header__container">
-        <a href="#" class="logo">TECH<span class="logo__accent">STORE</span></a>
-        
-        <form class="search-form" id="search-form" action="#" method="get">
-            <input type="text" placeholder="Найти технику..." class="search-form__input">
-            <button type="submit" class="search-form__btn">🔍</button>
+        <a href="#" class="logo">DAV<span class="logo__accent">STORE</span></a>
+
+        <form class="search-form" id="search-form" action="#" method="get" role="search">
+            <input type="search" id="search-input" placeholder="Найти технику..." class="search-form__input" aria-label="Поиск по каталогу">
+            <button type="submit" class="search-form__btn" aria-label="Найти">🔍</button>
         </form>
 
         <div class="header__actions">
             <span class="header__phone">8 (800) 555-35-35</span>
-            <button class="cart-btn" id="open-cart-btn">
-                🛒 <span class="cart-btn__count" id="cart-count">0</span> шт. | 
+            <button type="button" class="cart-btn" id="open-cart-btn" aria-label="Открыть корзину">
+                🛒 <span class="cart-btn__count" id="cart-count">0</span> шт. |
                 <span class="cart-btn__sum" id="cart-sum">0 ₽</span>
             </button>
         </div>
     </div>
 </header>
+
 <div class="page-wrapper">
     <aside class="sidebar">
         <h2 class="sidebar__title">Каталог</h2>
-        <nav class="sidebar__nav">
+        <nav class="sidebar__nav" aria-label="Категории товаров">
             <ul class="category-list">
                 <li><a href="#" class="category-link active" data-category="all">Все товары</a></li>
                 <li><a href="#" class="category-link" data-category="phones">Телефоны</a></li>
@@ -53,74 +54,76 @@
                 <h1 class="hero__title">iPhone 15 Pro</h1>
                 <p class="hero__desc">Титановый корпус, чип A17 Pro и невероятные возможности камеры.</p>
                 <span class="hero__price">129 990 ₽</span>
-                <button class="btn btn--primary add-to-cart" data-id="1" data-name="iPhone 15 Pro" data-price="129990">В корзину</button>
-            </div>
-            <div class="hero__image">
+                <button type="button" class="btn btn--primary add-to-cart" data-id="1" data-name="iPhone 15 Pro" data-price="129990">В корзину</button>
             </div>
         </section>
 
         <section class="catalog">
             <h2 class="catalog__title">Популярные товары <span class="catalog__count" id="catalog-count">Найдено: 6</span></h2>
-            <div class="products-grid">
+            <div class="products-grid" id="products-grid">
                 <article class="product-card" data-category="laptops" data-name="MacBook Air M2">
-                    <img src="img/laptop.jpg" alt="Ноутбук" class="product-card__img">
+                    <img src="img/laptop.jpg" alt="Ноутбук MacBook Air M2" class="product-card__img" loading="lazy">
                     <h3 class="product-card__title">MacBook Air M2</h3>
                     <p class="product-card__price">109 990 ₽</p>
-                    <button class="btn btn--outline add-to-cart" data-id="2" data-name="MacBook Air M2" data-price="109990">В корзину</button>
+                    <button type="button" class="btn btn--outline add-to-cart" data-id="2" data-name="MacBook Air M2" data-price="109990">В корзину</button>
                 </article>
 
                 <article class="product-card" data-category="laptops" data-name="MacBook Pro 16 M2">
-                    <img src="img/Mackbook Pro.jpeg" alt="Ноутбук" class="product-card__img">
+                    <img src="img/macbook-pro.jpeg" alt="Ноутбук MacBook Pro 16 M2" class="product-card__img" loading="lazy">
                     <h3 class="product-card__title">MacBook Pro 16 M2</h3>
                     <p class="product-card__price">390 990 ₽</p>
-                    <button class="btn btn--outline add-to-cart" data-id="2" data-name="MacBook Air M2" data-price="109990">В корзину</button>
+                    <button type="button" class="btn btn--outline add-to-cart" data-id="3" data-name="MacBook Pro 16 M2" data-price="390990">В корзину</button>
                 </article>
 
-                <article class="product-card" data-category="phones" data-name="Iphone 12 Pro Max">
-                    <img src="img/Iphone.jpg" alt="Телефон" class="product-card__img">
-                    <h3 class="product-card__title">Iphone 12 Pro Max</h3>
+                <article class="product-card" data-category="phones" data-name="iPhone 12 Pro Max">
+                    <img src="img/Iphone.jpg" alt="Смартфон iPhone 12 Pro Max" class="product-card__img" loading="lazy">
+                    <h3 class="product-card__title">iPhone 12 Pro Max</h3>
                     <p class="product-card__price">42 990 ₽</p>
-                    <button class="btn btn--outline add-to-cart" data-id="2" data-name="MacBook Air M2" data-price="109990">В корзину</button>
+                    <button type="button" class="btn btn--outline add-to-cart" data-id="4" data-name="iPhone 12 Pro Max" data-price="42990">В корзину</button>
                 </article>
 
-                <article class="product-card" data-category="tablets" data-name="Ipad Mini M5">
-                    <img src="img/Ipad.jpeg" alt="Планшет" class="product-card__img">
-                    <h3 class="product-card__title">Ipad Mini M5</h3>
+                <article class="product-card" data-category="tablets" data-name="iPad Mini M5">
+                    <img src="img/Ipad.jpeg" alt="Планшет iPad Mini" class="product-card__img" loading="lazy">
+                    <h3 class="product-card__title">iPad Mini M5</h3>
                     <p class="product-card__price">109 990 ₽</p>
-                    <button class="btn btn--outline add-to-cart" data-id="2" data-name="MacBook Air M2" data-price="109990">В корзину</button>
+                    <button type="button" class="btn btn--outline add-to-cart" data-id="5" data-name="iPad Mini M5" data-price="109990">В корзину</button>
                 </article>
 
                 <article class="product-card" data-category="audio" data-name="Yamaha ERG121 Metallic Red">
-                    <img src="img/Guitar.jpg" alt="Гитара" class="product-card__img">
+                    <img src="img/Guitar.jpg" alt="Электрогитара Yamaha ERG121" class="product-card__img" loading="lazy">
                     <h3 class="product-card__title">Yamaha ERG121 Metallic Red</h3>
                     <p class="product-card__price">43 990 ₽</p>
-                    <button class="btn btn--outline add-to-cart" data-id="2" data-name="MacBook Air M2" data-price="109990">В корзину</button>
+                    <button type="button" class="btn btn--outline add-to-cart" data-id="6" data-name="Yamaha ERG121 Metallic Red" data-price="43990">В корзину</button>
                 </article>
 
                 <article class="product-card" data-category="home" data-name="KRUPS Intuition Experience">
-                    <img src="img/coffeemaker.jpg" alt="Музы" class="product-card__img">
+                    <img src="img/coffeemaker.jpg" alt="Кофемашина KRUPS Intuition Experience" class="product-card__img" loading="lazy">
                     <h3 class="product-card__title">Автоматическая кофемашина KRUPS Intuition Experience</h3>
                     <p class="product-card__price">109 990 ₽</p>
-                    <button class="btn btn--outline add-to-cart" data-id="2" data-name="MacBook Air M2" data-price="109990">В корзину</button>
+                    <button type="button" class="btn btn--outline add-to-cart" data-id="7" data-name="KRUPS Intuition Experience" data-price="109990">В корзину</button>
                 </article>
             </div>
         </section>
     </main>
 </div>
 
+<footer class="footer">
+    <p>&copy; 2026 DavStore</p>
+</footer>
+
 <div class="modal-overlay" id="cart-modal">
-    <div class="modal">
-        <button class="modal__close" id="close-cart-btn">&times;</button>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="cart-title">
+        <button type="button" class="modal__close" id="close-cart-btn" aria-label="Закрыть">&times;</button>
 
         <div id="cart-view">
-            <h2 class="modal__title">Корзина</h2>
+            <h2 class="modal__title" id="cart-title">Корзина</h2>
             <div class="cart-items" id="cart-items-container">
                 <p class="empty-cart-msg">Корзина пуста</p>
             </div>
             <div class="cart-total">
                 Итого: <span id="modal-total-sum">0 ₽</span>
             </div>
-            <button class="btn btn--primary btn--full" id="checkout-btn">
+            <button type="button" class="btn btn--primary btn--full" id="checkout-btn" disabled>
                 Оформить заказ
             </button>
         </div>
@@ -128,15 +131,23 @@
         <div id="order-view" hidden>
             <h2 class="modal__title">Оформление заказа</h2>
             <form class="order-form" id="order-form">
-                <input type="text" name="firstName" placeholder="Имя" required>
-                <input type="text" name="lastName"  placeholder="Фамилия" required>
-                <input type="text" name="address"   placeholder="Адрес доставки" required>
-                <input type="tel"  name="phone"     placeholder="Контактный телефон" required>
+                <input type="text" name="firstName" placeholder="Имя" aria-label="Имя" autocomplete="given-name" required>
+                <input type="text" name="lastName" placeholder="Фамилия" aria-label="Фамилия" autocomplete="family-name" required>
+                <input type="text" name="address" placeholder="Адрес доставки" aria-label="Адрес доставки" autocomplete="street-address" required>
+                <input type="tel" name="phone" placeholder="Контактный телефон" aria-label="Контактный телефон" autocomplete="tel"
+                       pattern="[0-9+()\s\-]{10,18}" title="Введите телефон, например +7 (999) 123-45-67" required>
                 <button type="submit" class="btn btn--primary btn--full">Создать заказ</button>
             </form>
         </div>
+
+        <div id="success-view" class="order-success" hidden>
+            <h2 class="order-success__title">Заказ создан!</h2>
+            <p class="order-success__text">Мы свяжемся с вами для подтверждения.</p>
+            <button type="button" class="btn btn--primary btn--full" id="success-close-btn">Закрыть</button>
+        </div>
     </div>
 </div>
+
 <script src="js/app.js"></script>
 </body>
 </html>
