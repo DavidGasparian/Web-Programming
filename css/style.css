@@ -252,12 +252,11 @@ body {
     margin-bottom: 24px;
 }
 
-.hero__image {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 300px;
+.hero__img {
+    max-width: 100%;
+    max-height: 360px;
+    object-fit: contain;
+    border-radius: var(--border-radius);
 }
 
 /* КНОПКИ */
