@@ -137,7 +137,7 @@ function getVisibleTasks() {
 //подключаем css
 function loadStyles() {
   const link = createEl('link', {
-    attrs: { rel: 'stylesheet', href: 'css/style.css' }
+    attrs: { rel: 'stylesheet', href: 'css/style.css'}
   });
   document.head.append(link);
 }
