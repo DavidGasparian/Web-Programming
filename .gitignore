@@ -1,1 +1,15 @@
 .DS_Store
+.AppleDouble
+.LSOverride
+._*
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+*.log
+npm-debug.log*
+*.tmp
