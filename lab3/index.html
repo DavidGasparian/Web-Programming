@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0b0b10">
+  <meta name="description" content="2048 — игра-головоломка на чистом HTML, CSS и JavaScript.">
+  <title>2048</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/app.js" defer></script>
+</head>
+<body>
+  <main class="app">
+    <header class="header">
+      <div class="brand">
+        <p class="subtitle"></p>
+        <h1>2048</h1>
+      </div>
+
+      <div class="scores">
+        <div class="score">
+          <span>Очки</span>
+          <strong id="score">0</strong>
+        </div>
+        <div class="score score--best">
+          <span>Рекорд</span>
+          <strong id="best">0</strong>
+        </div>
+      </div>
+    </header>
+
+    <div class="toolbar">
+      <button id="undo" type="button" disabled>↶ Отменить ход</button>
+      <button id="restart" type="button">↻ Начать заново</button>
+      <button id="leaders" type="button">🏆 Таблица лидеров</button>
+    </div>
+
+    <section class="game">
+      <div class="board" id="board" tabindex="0" aria-label="Игровое поле 4 на 4">
+        <div class="grid" id="grid" aria-hidden="true"></div>
+        <div class="tiles" id="tiles" aria-hidden="true"></div>
+      </div>
+
+      <p class="hint">Стрелки или WASD на клавиатуре · свайпы и кнопки на телефоне</p>
+
+      <div class="dpad" id="dpad" hidden aria-label="Кнопки управления">
+        <button type="button" data-move="up" aria-label="Вверх">↑</button>
+        <button type="button" data-move="left" aria-label="Влево">←</button>
+        <button type="button" data-move="down" aria-label="Вниз">↓</button>
+        <button type="button" data-move="right" aria-label="Вправо">→</button>
+      </div>
+    </section>
+
+    <footer class="footer">
+      2048 by David Gasparian
+    </footer>
+  </main>
+
+  <!-- Окончание игры -->
+  <div class="modal" id="gameover-modal" hidden>
+    <div class="modal__window" role="dialog" aria-modal="true" aria-labelledby="gameover-title">
+      <div class="badge">2048</div>
+      <p class="subtitle">Игра окончена</p>
+      <h2 id="gameover-title">Ходов больше нет</h2>
+      <p class="final-score">Ваш счёт: <strong id="gameover-score">0</strong></p>
+      <p id="gameover-message">Введите имя и сохраните результат в таблицу лидеров.</p>
+
+      <form id="save-form">
+        <label class="sr-only" for="player-name">Ваше имя</label>
+        <input id="player-name" type="text" maxlength="20" placeholder="Ваше имя" autocomplete="nickname">
+        <p class="error" id="name-error" hidden></p>
+        <button class="primary" type="submit">Сохранить результат</button>
+      </form>
+
+      <div class="modal__buttons">
+        <button id="restart-over" type="button">↻ Начать заново</button>
+        <button id="open-leaders-over" type="button">Таблица лидеров</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Таблица лидеров -->
+  <div class="modal" id="leaders-modal" hidden>
+    <div class="modal__window" role="dialog" aria-modal="true" aria-labelledby="leaders-title">
+      <div class="modal__head">
+        <div>
+          <p class="subtitle">Зал славы</p>
+          <h2 id="leaders-title">Таблица лидеров</h2>
+        </div>
+        <button id="close-leaders" class="close" type="button" aria-label="Закрыть">×</button>
+      </div>
+
+      <table id="leaders-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Имя</th>
+            <th>Очки</th>
+            <th>Дата</th>
+          </tr>
+        </thead>
+        <tbody id="leaders-body"></tbody>
+      </table>
+
+      <p id="leaders-empty" hidden>Пока нет рекордов. Сыграйте партию — результат появится здесь.</p>
+    </div>
+  </div>
+</body>
+</html>
